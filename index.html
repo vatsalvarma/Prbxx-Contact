@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflect | Think Better</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #030308;
+            --text-main: #ffffff;
+            --text-muted: #8e8e99;
+            --accent-purple: #9d4edd;
+            --accent-bright: #e0aaff;
+            --glass-bg: rgba(20, 20, 30, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(3,3,8,0.9), rgba(3,3,8,0));
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .nav-logo-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-purple);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-actions a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn-trial {
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid rgba(157, 78, 221, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-trial:hover {
+            background: rgba(157, 78, 221, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding-top: 12rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .pill-badge span {
+            color: var(--accent-bright);
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 4rem;
+        }
+
+        /* Interactive Container */
+        .interactive-container {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            perspective: 1500px; /* For 3D parallax effect */
+        }
+
+        /* The Glow Effect */
+        .glow-wrapper {
+            position: absolute;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 400px;
+            z-index: 0;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .glow-arch {
+            width: 80%;
+            height: 100%;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, 
+                #ffffff 0%, 
+                #d88eff 10%, 
+                #6c2bd9 40%, 
+                transparent 70%);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            opacity: 0.8;
+            filter: blur(30px);
+            mix-blend-mode: screen;
+        }
+        
+        .glow-arch-core {
+            position: absolute;
+            bottom: 0;
+            width: 40%;
+            height: 50px;
+            background: #fff;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            filter: blur(20px);
+        }
+
+        /* Glass Mockup Cards */
+        .mockup-card {
+            position: relative;
+            z-index: 10;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.6),
+                0 0 40px rgba(108, 43, 217, 0.2);
+            overflow: hidden;
+            display: flex;
+            text-align: left;
+            transform-style: preserve-3d;
+        }
+
+        .mockup-card-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transform: translateZ(20px); /* Lift content for parallax */
+        }
+
+        /* Hero Mockup specific styling */
+        .hero-mockup {
+            height: 600px;
+            margin-bottom: 8rem;
+        }
+
+        .sidebar {
+            width: 240px;
+            border-right: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .search-bar {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-menu li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-menu li.active {
+            color: var(--text-main);
+        }
+
+        .main-editor {
+            flex: 1;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .main-editor h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .editor-content {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .editor-content ul {
+            padding-left: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .editor-content li {
+            margin-bottom: 0.8rem;
+        }
+
+        .highlight-text {
+            color: var(--accent-bright);
+        }
+
+        .right-panel {
+            width: 280px;
+            border-left: 1px solid var(--glass-border);
+            padding: 1.5rem;
+        }
+
+        .calendar-widget {
+            font-size: 0.8rem;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .calendar-grid div.active-day {
+            background: var(--accent-purple);
+            color: white;
+            border-radius: 4px;
+            padding: 0.2rem 0;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateZ(40px);
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 20;
+        }
+
+        .play-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translate(-50%, -50%) translateZ(50px) scale(1.05);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 10px 0 10px 16px;
+            border-color: transparent transparent transparent #ffffff;
+            margin-left: 4px;
+        }
+
+        /* Meetings Section */
+        .meetings {
+            padding: 8rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .meetings-mockup {
+            height: 400px;
+            max-width: 900px;
+            margin-top: 4rem;
+        }
+
+        .meetings .glow-wrapper {
+            top: -80px;
+            height: 250px;
+        }
+
+        .meetings .glow-arch {
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, 
+                #ffffff 0%, 
+                #4facfe 15%, 
+                #00f2fe 40%, 
+                transparent 70%);
+            opacity: 0.6;
+        }
+
+        .meetings-content {
+            display: flex;
+            width: 100%;
+        }
+
+        .meetings-left {
+            flex: 1;
+            padding: 2.5rem;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        .meetings-right {
+            width: 350px;
+            padding: 2.5rem;
+            position: relative;
+        }
+
+        /* Popups */
+        .popup-card {
+            background: rgba(25, 25, 35, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            position: absolute;
+            transform: translateZ(30px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .gcal-popup {
+            bottom: 30px;
+            left: 20px;
+            z-index: 15;
+        }
+
+        .outlook-popup {
+            bottom: 90px;
+            left: 80px;
+            z-index: 14;
+        }
+
+        .icon-box {
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Utilities */
+        .gsap-reveal {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Structure Bento CSS */
+        .structure-section {
+            padding: 8rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            padding-top: 4rem;
+        }
+        .structure-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .structure-header h2 { font-size: 3rem; font-weight: 600; margin-bottom: 1rem; }
+        .structure-header p { color: var(--text-muted); font-size: 1.1rem; }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: minmax(320px, auto);
+            gap: 1.5rem;
+            padding: 0 2rem;
+        }
+
+        .bento-card {
+            background: rgba(15, 15, 25, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at top left, rgba(157, 78, 221, 0.1), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bento-text {
+            position: relative;
+            z-index: 10;
+        }
+
+        .card-dashboard { grid-column: span 2; }
+        .card-timer { grid-column: span 1; }
+        .card-inspiration { grid-column: span 1; }
+        .card-collab { grid-column: span 1; }
+        .card-account { grid-column: span 1; }
+
+        .bento-text h3 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 600; }
+        .bento-text p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+        
+        .bento-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Dashboard Card */
+        .card-dashboard .bento-text { margin-bottom: 2rem; }
+        .dashboard-mockup {
+            width: 100%;
+            max-width: 550px;
+            background: linear-gradient(135deg, #2a1548, #180b2d);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .dash-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+        }
+        .dash-header .title { font-size: 1.1rem; font-weight: 600; }
+        .dash-header .date { font-size: 0.8rem; color: var(--text-muted); margin-left: 0.5rem; font-weight: 400; }
+        .dash-right { display: flex; align-items: center; gap: 1rem; }
+        .dash-time { font-size: 0.9rem; color: var(--accent-bright); }
+        .dash-pause { width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        
+        .dash-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .dash-label { font-size: 1.2rem; font-weight: 500; }
+        
+        .progress-section { margin-bottom: 1.5rem; }
+        .prog-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .progress-bar-bg { width: 100%; height: 12px; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #6c2bd9, #e0aaff, #fff); border-radius: 10px; box-shadow: 0 0 15px rgba(224,170,255,0.6); }
+        
+        .dash-list { list-style: none; font-size: 0.85rem; color: var(--text-muted); }
+        .dash-list li { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .dash-list li:last-child { border-bottom: none; }
+        
+        .premium-text {
+            background: linear-gradient(90deg, #fff, #e0aaff, #9d4edd, #e0aaff, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* Timer Card */
+        .timer-clock {
+            position: relative;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: #0b0b12;
+            border: 2px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 15px 30px rgba(0,0,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .timer-ring-glow {
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent 0%, transparent 60%, rgba(157,78,221,0.9) 100%);
+            mix-blend-mode: screen;
+        }
+        .timer-face {
+            position: absolute;
+            width: 85%; height: 85%;
+            border-radius: 50%;
+            background: #050508;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+        .timer-time { font-size: 2.8rem; font-weight: 300; }
+        .timer-knob {
+            position: absolute;
+            top: 15px; right: 0px;
+            width: 15px; height: 30px;
+            background: #222;
+            border-radius: 4px;
+            transform: rotate(45deg);
+            z-index: 1;
+        }
+
+        /* Inspiration Card */
+        .floating-icons { position: relative; width: 100%; height: 180px; }
+        .center-loader {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, #6c2bd9, #3a1c71);
+            border-radius: 18px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 30px rgba(108,43,217,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 5;
+        }
+        .spinner {
+            width: 24px; height: 24px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+        }
+        .icon-btn {
+            position: absolute;
+            width: 36px; height: 36px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+            font-weight: 600; font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .icon-btn.behance { top: 10%; left: 15%; }
+        .icon-btn.pinterest { bottom: 10%; left: 20%; }
+        .icon-btn.twitter { top: 20%; right: 10%; }
+        .icon-btn.linkedin { bottom: 20%; right: 15%; }
+
+        /* Collab Card */
+        .collab-orbital {
+            position: relative; width: 200px; height: 200px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .collab-center-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #9d4edd, #5918df);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.2rem; z-index: 2;
+            box-shadow: 0 0 25px rgba(157,78,221,0.6);
+        }
+        .orbital-ring {
+            position: absolute;
+            width: 160px; height: 160px;
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        .orbit-avatar {
+            position: absolute;
+            width: 28px; height: 28px;
+            background: #333;
+            border-radius: 50%;
+            border: 2px solid #9d4edd;
+            background-size: cover;
+        }
+        .orbit-avatar.a1 { top: -14px; left: 66px; background-image: url('https://i.pravatar.cc/100?img=1'); }
+        .orbit-avatar.a2 { top: 35px; right: -10px; background-image: url('https://i.pravatar.cc/100?img=2'); }
+        .orbit-avatar.a3 { bottom: 5px; right: 10px; background-image: url('https://i.pravatar.cc/100?img=3'); }
+        .orbit-avatar.a4 { bottom: 5px; left: 10px; background-image: url('https://i.pravatar.cc/100?img=4'); }
+        .orbit-avatar.a5 { top: 35px; left: -10px; background-image: url('https://i.pravatar.cc/100?img=5'); }
+
+        /* Account Card */
+        .account-mockup {
+            width: 100%;
+            height: 180px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .acc-header { font-size: 0.8rem; margin-bottom: 0.8rem; color: var(--text-muted); display: flex; justify-content: center; font-weight: 500; }
+        .acc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        .img-block {
+            height: 40px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 6px;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s ease;
+        }
+        .img-block:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1614064641913-6b71f3bb9e88?auto=format&fit=crop&w=100&q=80'); }
+        .img-block:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=100&q=80'); }
+        .img-block:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=100&q=80'); }
+        .img-block:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1531297172867-4b4413e11786?auto=format&fit=crop&w=100&q=80'); }
+
+        .acc-beam {
+            position: absolute;
+            bottom: 25px; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #e0aaff, transparent);
+            box-shadow: 0 0 15px 3px rgba(224,170,255,0.4);
+        }
+        .acc-footer {
+            position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 20px; background: rgba(157,78,221,0.5); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .acc-footer::after {
+            content: ''; width: 8px; height: 8px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff;
+        }
+
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .card-dashboard { grid-column: span 1; }
+        }
+        /* Hoosty Global Theme Overrides / Additions */
+        .hoosty-bg {
+            background-color: #0d0614; /* Deep dark purple/black */
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hoosty-section {
+            padding: 4rem 6rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Hoosty Hero */
+        .h-hero {
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding-top: 8rem; /* below nav */
+        }
+
+        .h-bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15vw;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.03);
+            white-space: nowrap;
+            z-index: 0;
+            pointer-events: none;
+            letter-spacing: 0.05em;
+        }
+
+        .h-hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .h-hero-left, .h-hero-right {
+            flex: 1;
+        }
+
+        .h-hero-center {
+            flex: 1.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .h-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(157, 78, 221, 0.15);
+            border: 1px solid rgba(157, 78, 221, 0.4);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: #d88eff;
+            margin-bottom: 1.5rem;
+        }
+
+        .h-hero-left h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .h-hero-left h1 span {
+            color: #d88eff;
+            font-style: italic;
+        }
+
+        .h-hero-right {
+            text-align: left;
+            padding-left: 2rem;
+        }
+
+        .h-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .h-feature-item {
+            font-size: 0.85rem;
+            color: #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            width: 80%;
+        }
+
+        .h-hero-right p {
+            font-size: 0.95rem;
+            color: #8e8e99;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 300px;
+        }
+
+        .h-btn-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .h-btn {
+            background: linear-gradient(90deg, #6c2bd9, #9d4edd);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(108, 43, 217, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .h-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .h-play-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid rgba(157, 78, 221, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        /* The CSS Glassy Orb */
+        .glass-orb {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .orb-core {
+            position: absolute;
+            top: 10%; left: 10%; right: 10%; bottom: 10%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #e0aaff, #9d4edd, #2a0845);
+            box-shadow: 0 0 60px rgba(157, 78, 221, 0.6), inset -20px -20px 40px rgba(0,0,0,0.7);
+        }
+
+        .orb-layer {
+            position: absolute;
+            top: -5%; left: -5%; right: -5%; bottom: -5%;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.4) 0%, transparent 60%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: inset 0 0 30px rgba(255,255,255,0.2);
+        }
+
+        .orb-layer-2 {
+            position: absolute;
+            top: -10%; left: -10%; right: -10%; bottom: -10%;
+            border-radius: 50%;
+            border: 1px solid rgba(224,170,255,0.2);
+            background: transparent;
+            /* GSAP will animate rotation */
+        }
+
+        .orb-layer-3 {
+            position: absolute;
+            top: 5%; left: 5%; right: 5%; bottom: 5%;
+            border-radius: 50%;
+            border: 1px dashed rgba(255,255,255,0.3);
+            background: transparent;
+        }
+
+        /* Stats Bar */
+        .h-stats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem 3rem;
+            margin-top: -3rem;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(15px);
+        }
+
+        .h-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .h-stat-num { font-size: 1.8rem; font-weight: 700; color: white; }
+        .h-stat-label { font-size: 0.8rem; color: #8e8e99; }
+        
+        .h-trusted { display: flex; align-items: center; gap: 2rem; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 2rem; }
+        .h-trusted-label { font-size: 0.8rem; color: #8e8e99; }
+        .h-trusted-logos { display: flex; gap: 1.5rem; color: white; font-weight: 600; font-size: 1rem; opacity: 0.6;}
+
+        /* About Us Section */
+        .h-about {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-top: 6rem;
+        }
+
+        .h-about-left {
+            flex: 1;
+            position: relative;
+        }
+
+        .h-about-img {
+            width: 100%;
+            height: 400px;
+            border-radius: 20px;
+            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80') center/cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .h-about-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 10, 30, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 80%;
+            color: #ddd;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .h-about-card-link {
+            display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; color: #d88eff; text-decoration: none; font-weight: 500; font-size: 0.85rem;
+        }
+        .h-about-card-link-icon {
+            width: 20px; height: 20px; border-radius: 50%; background: rgba(157, 78, 221, 0.5); display: flex; justify-content: center; align-items: center; font-size: 0.6rem; color: white;
+        }
+
+        .h-about-right {
+            flex: 1;
+        }
+
+        .h-about-right h4 {
+            color: #9d4edd;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .h-about-right h2 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            font-weight: 600;
+        }
+
+        /* Services Grid */
+        .h-services {
+            margin-top: 6rem;
+            margin-bottom: 4rem;
+        }
+        
+        .h-service-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .h-service-header h4 { font-size: 0.85rem; letter-spacing: 0.1em; color: #ccc; text-transform: uppercase; font-weight: 600; }
+        .h-service-controls { display: flex; gap: 0.5rem; }
+        .h-control-btn { width: 35px; height: 35px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: white; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background 0.2s; }
+        .h-control-btn:hover { background: rgba(255,255,255,0.1); }
+
+        .h-services-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1.2fr;
+            gap: 1.5rem;
+        }
+
+        .h-service-card {
+            background: rgba(20, 20, 30, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            min-height: 350px;
+        }
+
+        /* Left Service Card: Fluid Video Background */
+        .card-workflow {
+            position: relative;
+            z-index: 1;
+        }
+        .card-workflow::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, #180b2d, #4b1d82, #240b36);
+            background-size: 300% 300%;
+            animation: fluidVideo 6s ease-in-out infinite alternate;
+            z-index: -1;
+            opacity: 0.6;
+        }
+        @keyframes fluidVideo {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        .card-workflow .c-title { font-size: 1.8rem; font-weight: 500; margin-bottom: auto; }
+        .card-workflow .h-btn { align-self: flex-start; margin-top: auto; }
+
+        /* Center Service Card: Glowing Bar */
+        .card-scalable {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-scalable .c-title { font-size: 1.5rem; font-weight: 500; text-align: center; }
+        .glow-bar-container {
+            width: 100%;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            margin: 2rem 0;
+            display: flex;
+            gap: 6px;
+            padding: 6px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .glow-bar-segment {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            height: 100%;
+        }
+        .glow-scanner {
+            position: absolute;
+            top: 0; left: 0;
+            width: 25%;
+            height: 100%;
+            background: #9d4edd;
+            box-shadow: 0 0 25px 5px #9d4edd;
+            border-radius: 4px;
+            /* GSAP handles animation */
+        }
+        .card-scalable .h-btn { align-self: center; }
+
+        /* Right Service Card: Cost Optimization */
+        .card-cost {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-cost .c-title { font-size: 1.5rem; font-weight: 500; margin-bottom: 2rem; }
+        .card-cost .c-desc { font-size: 0.85rem; color: #8e8e99; margin-top: 2rem; }
+
+        /* Hide the old hero */
+        .hero { display: none !important; }
+
+        @media (max-width: 1024px) {
+            .h-hero-content { flex-direction: column; gap: 4rem; text-align: center; }
+            .h-hero-right { padding-left: 0; display: flex; flex-direction: column; align-items: center; }
+            .h-feature-item { width: 100%; }
+            .h-about { flex-direction: column; }
+            .h-services-grid { grid-template-columns: 1fr; }
+            .hoosty-section { padding: 3rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="gsap-reveal">
+        <div class="nav-logo">
+            <div class="nav-logo-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="3" fill="white"/>
+                </svg>
+            </div>
+            Reflect
+        </div>
+        <div class="nav-links">
+            <a href="#">Product</a>
+            <a href="#">Pricing</a>
+            <a href="#">Company</a>
+            <a href="#">Blog</a>
+            <a href="#">Changelog</a>
+        </div>
+        <div class="nav-actions">
+            <a href="#">Login</a>
+            <a href="#" class="btn-trial">Start free trial</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- HOOSTY SECTIONS -->
+        <div class="hoosty-bg">
+            <section class="h-hero hoosty-section">
+                <div class="h-bg-text gsap-h-text">INTELLIGENT</div>
+                <div class="h-hero-content">
+                    <div class="h-hero-left gsap-h-left">
+                        <div class="h-badge">Next-Level Business</div>
+                        <h1>Boost Efficiency,<br>Maximize <span>Profits.</span></h1>
+                    </div>
+                    
+                    <div class="h-hero-center">
+                        <div class="glass-orb">
+                            <div class="orb-core"></div>
+                            <div class="orb-layer"></div>
+                            <div class="orb-layer-2"></div>
+                            <div class="orb-layer-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="h-hero-right gsap-h-right">
+                        <div class="h-features">
+                            <div class="h-feature-item">Future-ready Strategies <span>↗</span></div>
+                            <div class="h-feature-item">24/7 Customer Support <span>→</span></div>
+                        </div>
+                        <p>Use our AI tools to automate tasks, cut costs, and enhance your bottom line.</p>
+                        <div class="h-btn-group">
+                            <a href="#" class="h-btn">Get Started</a>
+                            <div class="h-play-btn">▶</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="hoosty-section" style="padding-top: 0; padding-bottom: 0;">
+                <div class="h-stats-bar gsap-h-up">
+                    <div style="display:flex; gap:3rem; align-items: center;">
+                        <div class="h-stat"><span class="h-stat-num">125k+</span><span class="h-stat-label">Happy Client</span></div>
+                        <div class="h-play-btn" style="background:linear-gradient(135deg, #9d4edd, #5918df); border:none; color:white; font-size:0.6rem; letter-spacing:1px; width:40px; height:40px; transform:translateY(5px);">JOIN<br>NOW</div>
+                        <div class="h-stat"><span class="h-stat-num">95%</span><span class="h-stat-label">Growth</span></div>
+                        <div class="h-stat"><span class="h-stat-num">25</span><span class="h-stat-label">Years</span></div>
+                    </div>
+                    <div class="h-trusted">
+                        <span class="h-trusted-label">Trusted by:</span>
+                        <div class="h-trusted-logos">
+                            <span>Niscola.io</span>
+                            <span>SAMTIV</span>
+                            <span>IEA.</span>
+                            <span>ROKING</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="h-about hoosty-section">
+                <div class="h-about-left gsap-h-left">
+                    <div class="h-about-img">
+                        <div class="h-about-card">
+                            Leverage our AI tools to automate repetitive tasks, reduce costs, and improve your bottom line seamlessly.
+                            <br>
+                            <a href="#" class="h-about-card-link">Service <div class="h-about-card-link-icon">↓</div></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-about-right gsap-h-right">
+                    <h4>ABOUT US</h4>
+                    <h2>Boost Efficiency,<br>Maximize Profits with<br>Smart AI Solutions.</h2>
+                </div>
+            </section>
+
+            <section class="h-services hoosty-section">
+                <div class="h-service-header gsap-h-up">
+                    <h4>OUR SERVICE</h4>
+                    <div class="h-service-controls">
+                        <button class="h-control-btn">&lt;</button>
+                        <button class="h-control-btn">&gt;</button>
+                    </div>
+                </div>
+                <div class="h-services-grid">
+                    <!-- Left Card -->
+                    <div class="h-service-card card-workflow gsap-h-up">
+                        <div class="c-title">Workflow<br>Automation</div>
+                        <a href="#" class="h-btn">Get Started</a>
+                        <div style="position:absolute; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); display:flex; justify-content:center; align-items:center; font-size:0.7rem; color:#fff; backdrop-filter:blur(5px); cursor:pointer; box-shadow: 0 0 20px rgba(0,0,0,0.5);">Play Video</div>
+                    </div>
+                    
+                    <!-- Center Card -->
+                    <div class="h-service-card card-scalable gsap-h-up">
+                        <div class="c-title">Scalable AI<br>Solutions</div>
+                        <div class="glow-bar-container">
+                            <div class="glow-bar-segment"></div>
+                            <div class="glow-bar-segment"></div>
+                            <div class="glow-bar-segment"></div>
+                            <div class="glow-bar-segment"></div>
+                            <div class="glow-scanner"></div>
+                        </div>
+                        <a href="#" class="h-btn">Get Started</a>
+                    </div>
+
+                    <!-- Right Card -->
+                    <div class="h-service-card card-cost gsap-h-up">
+                        <div class="c-title">Cost<br>Optimization</div>
+                        <a href="#" class="h-btn">Get Started</a>
+                        <div class="c-desc">Cut operational costs by automating<br>and streamlining processes.</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- END HOOSTY SECTIONS -->
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="pill-badge gsap-reveal">
+                <span>✨</span> New: Our AI Integration just landed
+            </div>
+            <h1 class="gsap-reveal">Think better with Reflect</h1>
+            <p class="subtitle gsap-reveal">Never miss a note, idea or connection.</p>
+            
+            <div class="interactive-container" id="hero-interactive">
+                <!-- Glow Effect -->
+                <div class="glow-wrapper gsap-reveal">
+                    <div class="glow-arch"></div>
+                    <div class="glow-arch-core"></div>
+                </div>
+                
+                <!-- Mockup Content -->
+                <div class="mockup-card hero-mockup gsap-reveal">
+                    <div class="mockup-card-inner">
+                        <div class="sidebar">
+                            <div class="search-bar">
+                                🔍 Search anything...
+                            </div>
+                            <ul class="sidebar-menu">
+                                <li class="active">📝 Daily notes</li>
+                                <li>📁 All notes</li>
+                                <li>✅ Tasks</li>
+                                <li>🗺️ Map</li>
+                            </ul>
+                        </div>
+                        <div class="main-editor">
+                            <h2>| Sun, April 2nd, 2023</h2>
+                            <div class="editor-content">
+                                <p>• Today I started using <span class="highlight-text">Reflect</span></p>
+                                <ul>
+                                    <li>What is Reflect?</li>
+                                    <li>A note-taking tool designed to mirror the way we think.</li>
+                                    <li>Our brains remember things through associations. Reflect mimics this by backlinking notes to each other.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right-panel">
+                            <div class="calendar-widget">
+                                <div class="calendar-header">
+                                    <span>April 2023</span>
+                                    <span>&lt; &gt;</span>
+                                </div>
+                                <div class="calendar-grid" style="margin-bottom: 0.5rem; font-weight: 500;">
+                                    <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                                </div>
+                                <div class="calendar-grid">
+                                    <div style="opacity: 0.3;">26</div><div style="opacity: 0.3;">27</div><div style="opacity: 0.3;">28</div><div style="opacity: 0.3;">29</div><div style="opacity: 0.3;">30</div><div style="opacity: 0.3;">31</div><div>1</div>
+                                    <div class="active-day">2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div>
+                                    <div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div>
+                                    <div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Play Button Overlay -->
+                    <div class="play-button">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Structure Bento Section -->
+        <section class="structure-section">
+            <div class="structure-header gsap-reveal">
+                <h2>Structure for you</h2>
+                <p>Innovation, security, and efficiency for all payment rails, powered by AI.</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- Card 1: Dashboard -->
+                <div class="bento-card card-dashboard gsap-reveal">
+                    <div class="bento-text">
+                        <h3>Payment Management Dashboard</h3>
+                        <p>Manage finances, track payments, and prioritize projects seamlessly.</p>
+                    </div>
+                    <div class="bento-visual">
+                        <div class="dashboard-mockup">
+                            <div class="dash-header">
+                                <span class="title">To Do <span class="date">Mon, July 23</span></span>
+                                <div class="dash-right">
+                                    <span class="dash-time">04:15</span>
+                                    <div class="dash-pause"><div class="pause-icon" style="color:white; font-weight:bold; font-size:12px;">||</div></div>
+                                </div>
+                            </div>
+                            <div class="dash-body">
+                                <div class="dash-row">
+                                    <span class="dash-label">Financials</span>
+                                    <div class="avatars" style="display:flex;">
+                                        <div style="width:24px; height:24px; border-radius:50%; background:#fff; margin-right:-8px; border:2px solid #2a1548; background-image:url('https://i.pravatar.cc/100?img=11'); background-size:cover;"></div>
+                                        <div style="width:24px; height:24px; border-radius:50%; background:#fff; border:2px solid #2a1548; background-image:url('https://i.pravatar.cc/100?img=12'); background-size:cover;"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-section">
+                                    <div class="prog-labels"><span>Progress</span><span class="prog-percent premium-text">75%</span></div>
+                                    <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+                                </div>
+                                <ul class="dash-list">
+                                    <li>2. Wireframe for a web platform <span style="display:inline-block; width:12px; height:12px; border-radius:50%; border:2px solid #9d4edd;"></span></li>
+                                    <li>3. User flow diagram for payment processing <span style="display:inline-block; width:12px; height:12px; border-radius:50%; border:2px solid #9d4edd; background:#9d4edd; box-shadow:0 0 10px #9d4edd;"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Timer -->
+                <div class="bento-card card-timer gsap-reveal">
+                    <div class="bento-visual">
+                        <div class="timer-clock">
+                            <div class="timer-ring-bg"></div>
+                            <div class="timer-ring-glow"></div>
+                            <div class="timer-face">
+                                <div class="timer-time">11:37</div>
+                            </div>
+                            <div class="timer-knob"></div>
+                        </div>
+                    </div>
+                    <div class="bento-text">
+                        <h3>Payment Focus Timer</h3>
+                        <p>Track your hours, visualize spending, and meet financial goals.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Inspiration Hub -->
+                <div class="bento-card card-inspiration gsap-reveal">
+                    <div class="bento-visual">
+                        <div class="floating-icons">
+                            <div class="icon-btn behance">Bē</div>
+                            <div class="icon-btn pinterest">P</div>
+                            <div class="icon-btn twitter">X</div>
+                            <div class="icon-btn linkedin">in</div>
+                            <div class="center-loader">
+                                <div class="spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bento-text">
+                        <h3>Creative Inspiration Hub</h3>
+                        <p>Collect and organize financial insights, resources, and notes.</p>
+                    </div>
+                </div>
+
+                <!-- Card 4: Collaboration -->
+                <div class="bento-card card-collab gsap-reveal">
+                    <div class="bento-visual">
+                        <div class="collab-orbital">
+                            <div class="collab-center-icon">💬</div>
+                            <div class="orbital-ring">
+                                <div class="orbit-avatar a1"></div>
+                                <div class="orbit-avatar a2"></div>
+                                <div class="orbit-avatar a3"></div>
+                                <div class="orbit-avatar a4"></div>
+                                <div class="orbit-avatar a5"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bento-text">
+                        <h3>Team Collaboration</h3>
+                        <p>Stay informed with the latest updates, monitor team alerts.</p>
+                    </div>
+                </div>
+
+                <!-- Card 5: Account -->
+                <div class="bento-card card-account gsap-reveal">
+                    <div class="bento-visual">
+                        <div class="account-mockup">
+                            <div class="acc-header">Portfolio</div>
+                            <div class="acc-grid">
+                                <div class="img-block"></div>
+                                <div class="img-block"></div>
+                                <div class="img-block"></div>
+                                <div class="img-block"></div>
+                            </div>
+                            <div class="acc-beam"></div>
+                            <div class="acc-footer"></div>
+                        </div>
+                    </div>
+                    <div class="bento-text">
+                        <h3>My Account</h3>
+                        <p>View your financial details, transaction logs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meetings Section -->
+        <section class="meetings">
+            <div class="interactive-container" id="meetings-interactive">
+                <div class="glow-wrapper gsap-reveal" style="top: -100px;">
+                    <div class="glow-arch"></div>
+                </div>
+                
+                <div class="pill-badge gsap-reveal" style="margin-bottom: 1rem;">
+                    Meetings
+                </div>
+                <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;" class="gsap-reveal">Get more out<br>of your meetings</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;" class="gsap-reveal">Keep track of all your meetings and what was discussed.<br>Import events quickly with our Google Calendar and Outlook integrations.</p>
+
+                <div class="mockup-card meetings-mockup gsap-reveal">
+                    <div class="mockup-card-inner">
+                        <div class="meetings-content">
+                            <div class="meetings-left">
+                                <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Fri, October 15th, 2021</h3>
+                                <div class="editor-content" style="font-size: 0.85rem;">
+                                    <p>• I started using <span class="highlight-text">reflect.app</span> !</p>
+                                </div>
+                                
+                                <h3 style="font-size: 1.1rem; margin-top: 2rem; margin-bottom: 1rem;">Sat, October 16th, 2021</h3>
+                                <div class="editor-content" style="font-size: 0.85rem;">
+                                    <p>• I started using <span class="highlight-text">reflect.app</span> !</p>
+                                    <ul>
+                                        <li>What is Reflect?</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="meetings-right">
+                                <div class="calendar-widget">
+                                    <div class="calendar-header">
+                                        <span>February 2023</span>
+                                    </div>
+                                    <div class="calendar-grid">
+                                        <!-- Mock calendar grid -->
+                                        <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+                                        <div style="opacity: 0.3;">29</div><div style="opacity: 0.3;">30</div><div style="opacity: 0.3;">31</div><div>1</div><div>2</div><div>3</div><div>4</div>
+                                        <div>5</div><div>6</div><div class="active-day">7</div><div>8</div><div>9</div><div>10</div><div>11</div>
+                                    </div>
+                                </div>
+
+                                <!-- Absolute positioned integration popups for 3D effect -->
+                                <div class="popup-card outlook-popup">
+                                    <div class="icon-box" style="color: #0078D4; font-weight: bold;">O</div>
+                                    <div>
+                                        <div style="font-weight: 600;">Google Calendar</div>
+                                        <div style="color: var(--text-muted); font-size: 0.75rem;">alexmaccaw@outlook.com</div>
+                                    </div>
+                                </div>
+
+                                <div class="popup-card gcal-popup">
+                                    <div class="icon-box" style="color: #4285F4; font-weight: bold;">G</div>
+                                    <div>
+                                        <div style="font-weight: 600;">Google Calendar</div>
+                                        <div style="color: var(--text-muted); font-size: 0.75rem;">alexmaccaw@gmail.com</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Wait for DOM
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // -----------------------------------------
+            // HOOSTY ANIMATIONS
+            // -----------------------------------------
+            // Orb 3D Rotation
+            gsap.to(".orb-layer-2", {
+                rotationX: 360,
+                rotationY: 360,
+                duration: 20,
+                repeat: -1,
+                ease: "linear"
+            });
+            gsap.to(".orb-layer-3", {
+                rotationZ: -360,
+                rotationX: 180,
+                duration: 15,
+                repeat: -1,
+                ease: "linear"
+            });
+            gsap.to(".glass-orb", {
+                y: -15,
+                duration: 3,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut"
+            });
+
+            // Glowing Scanner Bar (Infinite Loop)
+            gsap.to(".glow-scanner", {
+                left: "75%", 
+                duration: 1.5,
+                repeat: -1,
+                yoyo: true,
+                ease: "power2.inOut"
+            });
+
+            // Entrance Animations
+            const tlHoosty = gsap.timeline({ defaults: { ease: "power3.out" } });
+            gsap.set(".gsap-h-text", { autoAlpha: 0, scale: 0.8 });
+            gsap.set(".gsap-h-left", { autoAlpha: 0, x: -50 });
+            gsap.set(".gsap-h-right", { autoAlpha: 0, x: 50 });
+            gsap.set(".gsap-h-up", { autoAlpha: 0, y: 30 });
+            gsap.set(".glass-orb", { scale: 0, rotation: -90 });
+
+            tlHoosty.to(".gsap-h-text", { duration: 1.5, autoAlpha: 1, scale: 1 }, 0)
+                    .to(".glass-orb", { duration: 1.5, scale: 1, rotation: 0, ease: "elastic.out(1, 0.7)" }, 0.2)
+                    .to(".gsap-h-left", { duration: 1, autoAlpha: 1, x: 0 }, 0.5)
+                    .to(".gsap-h-right", { duration: 1, autoAlpha: 1, x: 0 }, 0.7)
+                    .to(".h-stats-bar.gsap-h-up", { duration: 1, autoAlpha: 1, y: 0 }, 0.9);
+
+            // About Scroll
+            gsap.to(".h-about-left", {
+                scrollTrigger: { trigger: ".h-about", start: "top 75%" },
+                duration: 1, autoAlpha: 1, x: 0, ease: "power3.out"
+            });
+            gsap.to(".h-about-right", {
+                scrollTrigger: { trigger: ".h-about", start: "top 75%" },
+                duration: 1, autoAlpha: 1, x: 0, ease: "power3.out"
+            });
+
+            // Services Scroll
+            gsap.to(".h-service-header.gsap-h-up", {
+                scrollTrigger: { trigger: ".h-services", start: "top 80%" },
+                duration: 0.8, autoAlpha: 1, y: 0, ease: "power3.out"
+            });
+            gsap.to(".h-service-card.gsap-h-up", {
+                scrollTrigger: { trigger: ".h-services", start: "top 75%" },
+                duration: 0.8, autoAlpha: 1, y: 0, stagger: 0.15, ease: "power3.out"
+            });
+
+            // 1. Old Entrance Animations (Reflect)
+            // Set initial state
+            gsap.set(".gsap-reveal", { autoAlpha: 0, y: 30 });
+
+            // Animate Navbar
+            gsap.to("nav.gsap-reveal", {
+                duration: 1,
+                autoAlpha: 1,
+                y: 0,
+                ease: "power3.out",
+                delay: 0.2
+            });
+
+            // Animate Hero Section Timeline
+            const tlHero = gsap.timeline({ defaults: { ease: "power3.out" } });
+            tlHero.to(".hero .pill-badge", { duration: 0.8, autoAlpha: 1, y: 0 }, 0.4)
+                  .to(".hero h1", { duration: 0.8, autoAlpha: 1, y: 0 }, 0.6)
+                  .to(".hero .subtitle", { duration: 0.8, autoAlpha: 1, y: 0 }, 0.8)
+                  .to(".hero .glow-wrapper", { duration: 1.5, autoAlpha: 1, y: 0, scale: 1 }, 1.0)
+                  .fromTo(".hero-mockup", 
+                      { autoAlpha: 0, y: 100, rotationX: 10 },
+                      { duration: 1.2, autoAlpha: 1, y: 0, rotationX: 0 }, 1.2
+                  );
+
+            // Animate Meetings Section on Scroll
+            const tlMeetings = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".meetings",
+                    start: "top 70%",
+                    end: "bottom bottom"
+                },
+                defaults: { ease: "power3.out" }
+            });
+
+            tlMeetings.to(".meetings .pill-badge", { duration: 0.6, autoAlpha: 1, y: 0 })
+                      .to(".meetings h2", { duration: 0.6, autoAlpha: 1, y: 0 }, "-=0.4")
+                      .to(".meetings p", { duration: 0.6, autoAlpha: 1, y: 0 }, "-=0.4")
+                      .to(".meetings .glow-wrapper", { duration: 1.2, autoAlpha: 1, y: 0 }, "-=0.2")
+                      .fromTo(".meetings-mockup", 
+                          { autoAlpha: 0, y: 80 },
+                          { duration: 1, autoAlpha: 1, y: 0 }, "-=0.8"
+                      );
+
+            // Bento Grid Entrance
+            const tlBento = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".structure-section",
+                    start: "top 70%",
+                },
+                defaults: { ease: "power3.out" }
+            });
+
+            tlBento.to(".structure-header", { duration: 0.8, autoAlpha: 1, y: 0 })
+                   .to(".bento-card", { duration: 0.8, autoAlpha: 1, y: 30, stagger: 0.1 }, "-=0.4");
+
+            // Card 1: Dashboard Progress Fill
+            gsap.fromTo(".progress-bar-fill", 
+                { width: "0%" },
+                { width: "75%", duration: 2.5, ease: "power3.out", scrollTrigger: { trigger: ".card-dashboard", start: "top 80%" } }
+            );
+
+            // Card 2: Timer Animations
+            let timerData = { seconds: 11 * 60 + 37 }; // 11:37
+            gsap.to(timerData, {
+                seconds: timerData.seconds + 60,
+                duration: 60,
+                ease: "linear",
+                repeat: -1,
+                onUpdate: () => {
+                    let m = Math.floor(timerData.seconds / 60);
+                    let s = Math.floor(timerData.seconds % 60);
+                    document.querySelector('.timer-time').innerText = `${m}:${s.toString().padStart(2,'0')}`;
+                }
+            });
+            gsap.to(".timer-ring-glow", {
+                rotation: 360,
+                duration: 4,
+                repeat: -1,
+                ease: "linear"
+            });
+
+            // Card 3: Inspiration Loader
+            gsap.to(".spinner", {
+                rotation: 360,
+                duration: 1,
+                repeat: -1,
+                ease: "linear"
+            });
+            
+            // Subtle floating for icons
+            gsap.to(".icon-btn", {
+                y: -10,
+                duration: 2,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut",
+                stagger: 0.2
+            });
+
+            // Card 4: Orbital Avatars
+            gsap.to(".orbital-ring", {
+                rotation: 360,
+                duration: 15,
+                repeat: -1,
+                ease: "linear"
+            });
+            // Keep avatars upright
+            gsap.to(".orbit-avatar", {
+                rotation: -360,
+                duration: 15,
+                repeat: -1,
+                ease: "linear"
+            });
+
+            // Card 5: Account Hover & Entrance
+            gsap.from(".img-block", {
+                scale: 0.5,
+                opacity: 0,
+                stagger: 0.1,
+                duration: 0.6,
+                ease: "back.out(1.7)",
+                scrollTrigger: { trigger: ".card-account", start: "top 85%" }
+            });
+            
+            document.querySelectorAll('.img-block').forEach(block => {
+                block.addEventListener('mouseenter', () => gsap.to(block, {scale: 1.1, duration: 0.3}));
+                block.addEventListener('mouseleave', () => gsap.to(block, {scale: 1, duration: 0.3}));
+            });
+
+            // 2. Parallax / Interactive 3D Effect
+            const containers = document.querySelectorAll(".interactive-container");
+
+            containers.forEach(container => {
+                const card = container.querySelector(".mockup-card");
+                const glow = container.querySelector(".glow-wrapper");
+                
+                container.addEventListener("mousemove", (e) => {
+                    const rect = container.getBoundingClientRect();
+                    const x = e.clientX - rect.left; // x position within the element.
+                    const y = e.clientY - rect.top;  // y position within the element.
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    // Calculate rotation (max 10 degrees)
+                    const rotateX = ((y - centerY) / centerY) * -8;
+                    const rotateY = ((x - centerX) / centerX) * 8;
+
+                    // Calculate glow shift
+                    const glowX = ((x - centerX) / centerX) * 30;
+                    const glowY = ((y - centerY) / centerY) * 20;
+
+                    gsap.to(card, {
+                        duration: 0.5,
+                        rotationX: rotateX,
+                        rotationY: rotateY,
+                        ease: "power2.out",
+                        overwrite: "auto"
+                    });
+
+                    if(glow) {
+                        gsap.to(glow, {
+                            duration: 0.8,
+                            x: glowX,
+                            y: glowY,
+                            ease: "power2.out",
+                            overwrite: "auto"
+                        });
+                    }
+                });
+
+                // Reset on mouse leave
+                container.addEventListener("mouseleave", () => {
+                    gsap.to(card, {
+                        duration: 1,
+                        rotationX: 0,
+                        rotationY: 0,
+                        ease: "elastic.out(1, 0.5)",
+                        overwrite: "auto"
+                    });
+                    
+                    if(glow) {
+                        gsap.to(glow, {
+                            duration: 1,
+                            x: 0,
+                            y: 0,
+                            ease: "elastic.out(1, 0.5)",
+                            overwrite: "auto"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
